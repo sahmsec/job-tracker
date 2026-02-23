@@ -77,6 +77,20 @@ const jobs = [
   }
 ];
 
-function renderJobs(){
-    const container = document.getElementById('jobscontainer');
+// Create container helper
+function getJobsContainer(){
+    return document.getElementById('jobsContainer');
 }
+
+
+// function to filter jobs
+function getFilteredJobs(){
+    if(currentTab === 'all'){
+        return jobs;
+    }
+
+    return jobs.filter(function (job){
+      return job.status === currentTab;  
+    });
+}
+
