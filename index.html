@@ -14,7 +14,24 @@
 
 <body class="bg-base-200 min-h-screen p-4">
     <h1 class="text-2xl font-bold">Job Application Tracker</h1>
-    
+    <br>
+
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="stat bg-base-100 shadow">
+            <div class="stat-title">Total Jobs</div>
+            <div id="totalCount" class="stat-value">0</div>
+        </div>
+
+        <div class="stat bg-base-100 shadow">
+            <div class="stat-title">Interview</div>
+            <div id="interviewCount" class="stat-value text-success">0</div>
+        </div>
+
+        <div class="stat bg-base-100 shadow">
+            <div class="stat-title">Rejected</div>
+            <div id="rejectedCount" class="stat-value text-error">0</div>
+        </div>
+    </section>
 
     <script src="main.js"></script>
 </body>
