@@ -94,3 +94,10 @@ function getFilteredJobs(){
     });
 }
 
+// update tab count function
+function updateTabCount(count){
+    const textElement = document.getElementById('tabcount');
+    textElement.innerText = count + " jobs";
+}
+
+
