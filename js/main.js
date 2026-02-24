@@ -78,22 +78,35 @@ function getJobsContainer() {
   return document.getElementById("jobsContainer");
 }
 
-// Returns jobs based on the currently selected tab
+// tab checking function
 function getFilteredJobs() {
   if (currentTab === "all") return jobs;
-
   return jobs.filter(function (job) {
     return job.status === currentTab;
   });
 }
 
-// Updates the job count shown near the tabs
 function updateTabCount(count) {
   const el = document.getElementById("tabCount");
   el.innerText = count + " Jobs";
 }
 
-// empty state UI
+function updateDashboard() {
+  const total = jobs.length;
+
+  let interview = 0;
+  let rejected = 0;
+
+  for (let i = 0; i < jobs.length; i++) {
+    if (jobs[i].status === "interview") interview++;
+    if (jobs[i].status === "rejected") rejected++;
+  }
+
+  document.getElementById("totalCount").innerText = total;
+  document.getElementById("interviewCount").innerText = interview;
+  document.getElementById("rejectedCount").innerText = rejected;
+}
+
 function renderEmptyState(container) {
   container.innerHTML = `
     <div class="w-full flex items-center justify-center">
@@ -106,11 +119,9 @@ function renderEmptyState(container) {
   `;
 }
 
-// Creates and returns the HTML for a single job card
 function createJobCard(job) {
   let statusBadge = "";
 
-  // Decide which status badge to show based on job status
   if (job.status === "all") {
     statusBadge = `<span class="badge badge-neutral">NOT APPLIED</span>`;
   } else if (job.status === "interview") {
@@ -125,9 +136,9 @@ function createJobCard(job) {
         <div class="flex justify-between items-start">
           <div>
             <h2 class="font-semibold text-lg">${job.position}</h2>
-            <p class="text-sm opacity-70">${job.location} • ${job.type} • ${job.salary}</p>
+            <p class="text-sm opacity-70">${job.location} | ${job.type} | ${job.salary}</p>
           </div>
-          <button onclick="deleteJob(${job.id})" class="btn btn-ghost btn-sm">🗑️</button>
+          <button onclick="deleteJob(${job.id})" class="btn btn-ghost btn-sm"><i class="fa-solid fa-trash"></i></button>
         </div>
 
         <div class="mt-2">${statusBadge}</div>
@@ -143,14 +154,12 @@ function createJobCard(job) {
   `;
 }
 
-// jobs based on current tab and data
+// function that shows the jobs
 function renderJobs() {
   const container = getJobsContainer();
   const filteredJobs = getFilteredJobs();
 
-
   updateTabCount(filteredJobs.length);
-
 
   if (filteredJobs.length === 0) {
     renderEmptyState(container);
@@ -165,13 +174,21 @@ function renderJobs() {
   container.innerHTML = html;
 }
 
-
+// tab switch function
 function changeTab(tab) {
   currentTab = tab;
+
+  const tabs = document.querySelectorAll(".tab-btn");
+  for (let i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove("tab-active");
+  }
+
+  const clicked = Array.from(tabs).find(t => t.textContent.toLowerCase() === tab);
+  if (clicked) clicked.classList.add("tab-active");
+
   renderJobs();
 }
 
-// Updates the status of a job 
 function setStatus(id, status) {
   for (let i = 0; i < jobs.length; i++) {
     if (jobs[i].id === id) {
@@ -180,9 +197,10 @@ function setStatus(id, status) {
     }
   }
   renderJobs();
+  updateDashboard();
 }
 
-
+// delete job function
 function deleteJob(id) {
   const newJobs = jobs.filter(function (job) {
     return job.id !== id;
@@ -194,7 +212,9 @@ function deleteJob(id) {
   }
 
   renderJobs();
+  updateDashboard();
 }
 
 
 renderJobs();
+updateDashboard();
